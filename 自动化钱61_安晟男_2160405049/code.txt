@@ -1,0 +1,144 @@
+bmp_read.m：
+clear;
+clc;
+infor = imfinfo('7.bmp','bmp')
+%infor为存储7.bmp文件头和信息头的结构体
+[cdata, colormap] = imread('7.bmp');
+%cdata存储7.bmp的位图数据，colormap存储7.bmp的调色板
+
+im_gray_trans.m：
+function img_t = im_gray_trans(img,lev)
+if lev < 0
+    lev = 0;
+elseif lev > 8
+    lev = 8;
+end
+mid = uint8(2^lev);   
+img_t = (img / mid) * mid;
+return
+end
+
+img_t_8level.m：
+clear;
+clc;
+img=imread('lena.bmp');
+img_t = uint8([]);
+for i=1:8
+    img_t(:,:,i) = im_gray_trans(img, i);
+    subplot(4,2,i)
+    imshow(img_t(:,:,i))
+    titlename = strcat(num2str(9-i),'灰度级');
+    title(titlename);
+end
+
+ave_var.m：
+clear;
+clc;
+img = imread('lena.bmp');
+img = double(img);
+img_ave = mean(mean(img))
+img_var = var(img(:))
+
+lena_resize.m：
+clear;
+clc;
+img = imread('lena.bmp');
+img_nearest = imresize(img,4,'nearest');
+figure(1)
+imshow(img_nearest)
+title("近邻插值");
+img_bilinear = imresize(img,4,'bilinear');
+figure(2)
+imshow(img_bilinear)
+title("双线性插值");
+img_bicubic = imresize(img,4,'bicubic');
+figure(3)
+imshow(img_bicubic)
+title("双三次插值");
+
+shear_rotate.m：
+clear;
+clc;
+img1 = imread('lena.bmp');
+img2 = imread('elain1.bmp');
+[h1,w1] = size(img1);
+[h2,w2] = size(img1);
+theta=pi/12;
+%水平错切
+for i=1:h1
+    for j=1:w1
+        img1_shear(round(i+j*tan(theta)),j)=img1(i,j);
+    end
+end
+figure(1)
+imshow(img1_shear)
+figure(2)
+img_nearest = imresize(img1_shear,4,'nearest');
+subplot(1,3,1)
+imshow(img_nearest)
+title("近邻插值",'Fontsize',20);
+img_bilinear = imresize(img1_shear,4,'bilinear');
+subplot(1,3,2)
+imshow(img_bilinear)
+title("双线性插值",'Fontsize',20);
+img_bicubic = imresize(img1_shear,4,'bicubic');
+subplot(1,3,3)
+imshow(img_bicubic)
+title("双三次插值",'Fontsize',20);
+%垂直错切
+for i=1:h2
+    for j=1:w2
+        img2_shear(i,round(j+i*tan(theta)))=img2(i,j);
+    end
+end
+figure(3)
+imshow(img2_shear)
+figure(4)
+img_nearest = imresize(img2_shear,4,'nearest');
+subplot(1,3,1)
+imshow(img_nearest)
+title("近邻插值",'Fontsize',20);
+img_bilinear = imresize(img2_shear,4,'bilinear');
+subplot(1,3,2)
+imshow(img_bilinear)
+title("双线性插值",'Fontsize',20);
+img_bicubic = imresize(img2_shear,4,'bicubic');
+subplot(1,3,3)
+imshow(img_bicubic)
+title("双三次插值",'Fontsize',20);
+angle = 15;
+img1_rotate = imrotate(img1, angle);%逆时针旋转
+figure(5)
+imshow(img1_rotate)
+figure(6)
+img_nearest = imresize(img1_rotate,4,'nearest');
+subplot(1,3,1)
+imshow(img_nearest)
+title("近邻插值",'Fontsize',20);
+img_bilinear = imresize(img1_rotate,4,'bilinear');
+subplot(1,3,2)
+imshow(img_bilinear)
+title("双线性插值",'Fontsize',20);
+img_bicubic = imresize(img1_rotate,4,'bicubic');
+subplot(1,3,3)
+imshow(img_bicubic)
+title("双三次插值",'Fontsize',20);
+img2_rotate = imrotate(img2, -angle);%顺时针旋转
+figure(7)
+imshow(img2_rotate)
+figure(8)
+img_nearest = imresize(img2_rotate,4,'nearest');
+subplot(1,3,1)
+imshow(img_nearest)
+title("近邻插值",'Fontsize',20);
+img_bilinear = imresize(img2_rotate,4,'bilinear');
+subplot(1,3,2)
+imshow(img_bilinear)
+title("双线性插值",'Fontsize',20);
+img_bicubic = imresize(img2_rotate,4,'bicubic');
+subplot(1,3,3)
+imshow(img_bicubic)
+title("双三次插值",'Fontsize',20);
+
+
+
